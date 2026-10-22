@@ -1,0 +1,10 @@
+#ifndef UI_H
+#define UI_H
+
+#include "structures.h"
+
+int board_draw_input(void);
+void draw_board(int Grid_Value);
+double readInRange(const char *prompt, double min, double max);
+
+#endif
