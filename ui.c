@@ -134,3 +134,66 @@ void initial_settingsForES(EscortShip escorts[], int *numEscorts, double gridSiz
 
 
 }
+
+//function to view instructions
+void view_instructions(void){
+    printf("-----------------------------------INSTRUCTIONS-------------------------------------\n");
+    printf("------------------------------------------------------------------------------------\n");
+
+
+    printf("------------------------------------------------------------------------------------\n");
+    printf("MAIN MENU OPTIONS\n");
+    printf("  1. Start Simulation  = open the Setup menu, then run a battle\n");
+    printf("  2. View Instructions = show this help screen\n");
+    printf("  3. Simulation Stats  = read the last saved results (sim_output.txt)\n");
+    printf("  4. Exit              = close the program\n");
+
+    printf("------------------------------------------------------------------------------------\n");
+    printf("SETUP MENU OPTIONS\n");
+    printf("  1. Battleship Properties  = set the values that control the battleship\n");
+    printf("  2. Escort ship Properties = set how many escort ships take part\n");
+    printf("  3. Seed value             = set the random generator and canvas size (D)\n");
+    printf("  4. Return to main menu    = close this menu; the battle then starts\n");
+
+    printf("------------------------------------------------------------------------------------\n");
+    printf("BATTLESHIP SETTINGS AND ALLOWED RANGES\n");
+    printf("  Name            : any text (e.g. 'USS Iowa BB-61')\n");
+    printf("  Notation        : U, M, R or S\n");
+    printf("  Position X, Y   : 0 to D (must be in the given range)\n");
+    printf("  Min Velocity    : 0 to 5000.00\n");
+    printf("  Max Velocity    : 0 to 5000.00 (must be greater than Min Velocity)\n");
+    printf("  Min/Max Angle   : 0 to 90.00 degrees (Max must be greater than Min angle)\n");
+    printf("  Impact Power    : 0 to 1.00 (damage dealt by the battleship)\n");
+    printf("  Gamma           : 0 to 1.00 (how fast shell power degrades)\n");
+    printf("  Reload Time     : 0.10 to 60.00 seconds between shots\n");
+    printf("  Entering a value outside a range shows an 'Out of range' message.\n");
+    printf("------------------------------------------------------------------------------------\n");
+    printf("ESCORT SHIP SETTINGS\n");
+    printf("  Number of escorts : 1 to 50. Their type, position, velocity, angles,\n");
+    printf("  impact power and reload time are all generated randomly\n");
+    printf("  There are 5 types (EA to EE) with different impact powers (0.04 to 0.08).\n");
+    printf("------------------------------------------------------------------------------------\n");
+    printf("SEED VALUE SETTINGS\n");
+    printf("  Seed       : a number (0 - 4294967295) used to generate random values.\n");
+    printf("  Grid Size D: 1.00 to 100000.00. The canvas is a square with corners\n");
+    printf("               (0, 0) and (D, D)\n");
+    printf("------------------------------------------------------------------------------------\n");
+
+    printf("AFTER THE BATTLE\n");
+    printf("  The simulation can be run as:\n");
+    printf("    Part 1-A : instant reload, a single shell destroys any ship\n");
+    printf("    Part 1-B : battleship moves along a random k-point path (with\n");
+    printf("              optional gun jamming after t iterations, 0<theta<30)\n");
+    printf("    Part 1-C : E ships deal partial damage (impact power), B still\n");
+    printf("              destroys any E ship with one shell\n");
+    printf("    Part 2-A : B reload time (T_B) between firings + a threat-based\n");
+    printf("              attack-order strategy; E ships still fire only once\n");
+    printf("    Part 2-B : E ships also fire continuously (per-type T_E reload);\n");
+    printf("              B keeps its reload time and attack-order strategy\n");
+    printf("    Part 2-C : combined - reload times (T_B, T_E), continuous fire,\n");
+    printf("              impact-power degradation (IP = IP0*e^-gamma*n)\n");
+    
+   
+    printf("====================================================================================\n");
+}
+
