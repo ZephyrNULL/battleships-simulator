@@ -197,3 +197,48 @@ void view_instructions(void){
     printf("====================================================================================\n");
 }
 
+void setup(EscortShip escorts[], Battleship *b, SimConfig *config){
+    int option = 0;
+    do {
+        printf("************************************************************************************\n");
+        printf("*                                                                                  *\n");
+        printf("*                                                                                  *\n");
+        printf("*                                                                                  *\n");
+        printf("*                   +++++++++++++++SETUP MENU+++++++++++++++                       *\n");
+        printf("*                   +++++++1.) Battleship Properties++++++++                       *\n");
+        printf("*                   +++++++2.) Escort ship Properties+++++++                       *\n");
+        printf("*                   +++++++++++++3.) Seed Value+++++++++++++                       *\n");
+        printf("*                   +++++++++4.) Return to main menu++++++++                       *\n");
+        printf("*                                                                                  *\n");
+        printf("*                                                                                  *\n");
+        printf("*                                                                                  *\n");
+        printf("************************************************************************************\n");
+        printf("Enter option: ");
+        if (scanf("%d", &option) != 1) break;
+
+        switch(option) {
+            case 1:
+                initial_settingsForBS(b, config->battlefieldSize);
+                break;
+
+            case 2:
+
+                initial_settingsForES(escorts, &config->numEscorts, config->battlefieldSize, b->vMax);
+                break;
+
+            case 3:
+                printf("Enter Random Seed (0 - 4294967295): ");
+
+                scanf("%u", &config->seed);
+                srand(config->seed);
+
+                config->battlefieldSize = readInRange("Enter Grid Size (D)", 1.0, 100000.0);
+                break;
+            case 4:
+                printf("Returning to main menu...\n");
+                break;
+            default:
+                printf("Option out of range.\n");
+        }
+    } while(option != 4);
+}
