@@ -242,3 +242,71 @@ void setup(EscortShip escorts[], Battleship *b, SimConfig *config){
         }
     } while(option != 4);
 }
+
+//function to start the simulation
+void start_simulation_flow(SimConfig *config, Battleship *b, EscortShip customEscorts[]){
+    
+    if (config->numEscorts < 1){
+         config->numEscorts = 1;
+    }
+    if (config->numEscorts > MAX_ESCORTS) {
+        config->numEscorts = MAX_ESCORTS;
+    }
+
+    EscortShip *escorts = malloc(sizeof(EscortShip) * config->numEscorts);
+    if (!escorts) {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+
+    //reset battleship state so it starts each simulation fresh
+    b->health = 1.0;
+    b->destroyed = false;
+    b->shotsFired = 0;
+
+    //copy user desired configurations or genreate randomely
+    for (int i = 0; i < config->numEscorts; i++) {
+        if (customEscorts[i].id != 0) {
+            escorts[i] = customEscorts[i];
+        } else {
+            escorts[i].id = i + 1;
+            int typeIdx = rand() % 5;
+            generateEscortProperties(&escorts[i], typeIdx, config->battlefieldSize, b->vMax);
+        }
+    }
+
+    
+    for (int i = 0; i < config->numEscorts; i++) {
+        escorts[i].health = 1.0;
+        escorts[i].destroyed = false;
+        escorts[i].shotsFired = 0;
+        
+        escorts[i].nextFiringTime = (double)(rand() % 101) / 100.0 * escorts[i].reloadTime;
+    }
+    printf("\nChoose which part of the simulation to run:\n");
+
+    printf("  1.) Part 1-A  (instant reload, single shot destroys any ship)\n");
+    printf("  2.) Part 1-B  (battleship moves along a random k-point path)\n");
+    printf("  3.) Part 1-C  (B still one-shots E; E ships only deal partial damage)\n");
+    printf("  4.) Part 2-A  (T_B reload + B attack-order strategy; E still fires once)\n");
+    printf("  5.) Part 2-B  (T_B and T_E reloads; B and E fire continuously)\n");
+    printf("  6.) Part 2-C  (combined: reload times, continuous fire, impact degradation)\n");
+
+printf("Enter option: ");
+    int part = 0;
+    scanf("%d", &part);
+
+    if(part >= 1 && part <= 3){
+
+        runPart1Simulation(config, b, escorts, part);
+    }else if (part >= 4 && part <= 6) {
+        runPart2Simulation(config, b, escorts, part);
+    }else{
+
+        printf("Invalid part option. Returning to main menu.\n");
+    }
+
+    free(escorts);
+
+    
+}

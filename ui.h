@@ -10,5 +10,6 @@ void initial_settingsForBS(Battleship *b, double gridSize);
 void initial_settingsForES(EscortShip escorts[], int *numEscorts, double gridSize, double bVMax);
 void view_instructions(void);
 void setup(EscortShip escorts[], Battleship *b, SimConfig *config);
+void start_simulation_flow(SimConfig *config, Battleship *b, EscortShip customEscorts[]);
 
 #endif
