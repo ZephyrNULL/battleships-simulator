@@ -98,3 +98,84 @@ int runPart1A(Battleship *b, EscortShip escorts[], int numEscorts, FILE *logFile
 
     return b->destroyed ? 1 : 0;
 }
+
+//battleship moves along k randomly generated points inside the canvas.
+
+void runPart1B(Battleship *b, EscortShip escorts[], int numEscorts, int k, double jamAfterIterations, double jamAngleDeg, const char *baseFile,
+               double gridSize, bool escortsDealPartialDamage){
+    int escortsRemaining = numEscorts;
+
+    //k point where the target sank
+    int sankAtPoint = -1;
+    int destroyerId = -1;
+
+    for (int iter = 0; iter < k; iter++) {
+        //pick a random point inside the canvas for this iteration
+        double px = (double)(rand() % ((int)gridSize + 1));
+
+        double py = (double)(rand() % ((int)gridSize + 1));
+
+        b->pos.x = px;
+        b->pos.y = py;
+
+        //apply gun jamming after t iterations 
+        if (jamAngleDeg > 0.0 && iter >= jamAfterIterations)
+        {
+            b->angleMin = jamAngleDeg;
+            b->angleMax = 90.0;
+        }
+
+        char fname[256];
+        snprintf(fname, sizeof(fname), "%s_part1B_iter%d.txt", baseFile, iter + 1);
+        FILE *logFile = fopen(fname, "w");
+        if (!logFile)
+        {
+
+            printf("Failed to open %s for logging.\n", fname);
+            return;
+        }
+
+        fprintf(logFile, "--- PART 1-B (iteration %d of %d) ---\n", iter + 1, k);
+        fprintf(logFile, "Battleship at (%.1f, %.1f), jam angle = %.1f\n",
+                b->pos.x, b->pos.y, jamAngleDeg);
+
+        //save initial battlefield conditions for this iteration
+        fprintf(logFile, "--- INITIAL CONDITIONS ---\n");
+        fprintf(logFile, "Battleship: %s (%s) Vmax=%.1f Vmin=%.1f angles %.1f-%.1f\n", b->typeName, b->typeNotation, b->vMax, b->vMin, b->angleMin, b->angleMax);
+        for(int i = 0; i < numEscorts; i++){
+            if (escorts[i].destroyed) continue;
+            fprintf(logFile, "Escort E%d (%s) at (%.1f, %.1f): Vmin=%.1f Vmax=%.1f "
+                             "angles %.1f-%.1f type=%s\n", escorts[i].id, escorts[i].typeNotation, escorts[i].pos.x,
+                    escorts[i].pos.y, escorts[i].vMin, escorts[i].vMax,
+                    escorts[i].angleMin, escorts[i].angleMax, escorts[i].typeName);
+        }
+
+        int result = runPart1A(b, escorts, numEscorts, logFile,
+                               escortsDealPartialDamage, &destroyerId);
+
+        //recount how many escorts are still alive
+
+        escortsRemaining = 0;
+        for (int i = 0; i < numEscorts; i++) 
+        {
+            if (!escorts[i].destroyed) escortsRemaining++;
+        }
+
+        fclose(logFile);
+
+        if (result) 
+        {
+            
+            sankAtPoint = iter + 1;
+            printf("B sank at iteration %d (point %d) by Escort E%d. Simulation 1-B stopped.\n", iter + 1, iter + 1, destroyerId);
+            break;
+        }
+    }
+
+    if (sankAtPoint == -1){
+
+        printf("Part 1-B: Battleship survived all %d points. Escorts remaining: %d.\n", k, escortsRemaining);
+    } else {
+        printf("Part 1-B: Battleship sank at point %d of %d.\n", sankAtPoint, k);
+    }
+}
