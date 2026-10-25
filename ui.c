@@ -310,3 +310,58 @@ printf("Enter option: ");
 
     
 }
+
+
+//randomly generate the escort ship settings 
+static void generateEscortProperties(EscortShip *e, int typeIdx, double gridSize, double bVMax){
+    const char *types[] = {"EA", "EB", "EC", "ED", "EE"};
+    double baseImpacts[] = {0.08, 0.06, 0.07, 0.05, 0.04};
+
+    double reloads[] = {2.0, 2.5, 2.2, 3.0, 3.5};
+
+    //angle range (thetaH - thetaL) for each escort type, from Table 1
+    double angleRanges[] = {20.0, 30.0, 25.0, 50.0, 70.0};
+
+    strcpy(e->typeNotation, types[typeIdx]);
+
+    sprintf(e->typeName, "Escort-%s-%d", types[typeIdx], e->id);
+    e->pos.x = (double)(rand() % (int)gridSize);
+    e->pos.y = (double)(rand() % (int)gridSize);
+    e->impactPower = baseImpacts[typeIdx];
+    e->gamma = 0.01 + ((double)(rand() % 90) / 1000.0);
+
+    if (typeIdx == 0) {
+        
+        e->vMax = 1.2 * bVMax;
+        e->vMin = 20.0 + ((double)(rand() % 100));
+        if (e->vMin >= e->vMax) e->vMin = e->vMax * 0.5;
+    } else {
+        
+        e->vMin = 20.0 + ((double)(rand() % 100));
+        e->vMax = e->vMin + ((double)(rand() % 80));
+        if(e->vMax >= bVMax){
+            e->vMax = bVMax - 10.0;
+        }
+        if (e->vMax <= e->vMin){
+            e->vMax = e->vMin + 5.0;
+        }
+    }
+
+    //randomly generate angles within the range
+    e->angleMin = 10.0 + (double)(rand() % 10);
+    e->angleMax = e->angleMin + angleRanges[typeIdx];
+
+    if(e->angleMax > 90.0){
+        e->angleMax = 90.0;
+    }
+    if (e->angleMax <= e->angleMin){
+        e->angleMax = e->angleMin + 5.0;
+    }
+
+    e->reloadTime = reloads[typeIdx];
+    e->shotsFired = 0;
+    e->health = 1.0;
+    e->destroyed = false;
+    e->nextFiringTime = (double)(rand() % 101) / 100.0 * e->reloadTime;
+}
+
